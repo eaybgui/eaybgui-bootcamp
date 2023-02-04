@@ -3,11 +3,11 @@ import {useEffect, useState} from 'react'
 import { getAllNotes } from './notes/getAllnotes'
 import { createNote } from './notes/createNote'
 
-export default function App(props) {
+export default function App() {
     
-    const [notes, setNotes] = useState(props.notes)
+    const [notes, setNotes] = useState([])
     const [newNote, setNewNote] = useState("")
-   // const [showAll, setShowAll] = useState(true)
+    const [showAll, setShowAll] = useState(true)
 
     useEffect(() => { //una request  
         getAllNotes().then((notes) => setNotes(notes))
@@ -34,21 +34,21 @@ export default function App(props) {
         setNewNote("") //para limpiar el input
     }
 
-    // const handleShowAll = () =>{
-    //     setShowAll(() => !showAll)
-    // }
+    const handleShowAll = () =>{
+        setShowAll(() => !showAll)
+    }
 
     return ( 
         <div>
-            {/* <button onClick={handleShowAll}>{showAll ? "Show only important" : "Show all"}</button> */}
+            <button onClick={handleShowAll}>{showAll ? "Show only important" : "Show all"}</button>
             <ol>
                 {notes
-                // .filter(note => {
-                //     if(showAll === true) return true
-                //     return note.important === true
-                // })
+                .filter(note => {
+                    if(showAll === true) return true
+                    return note.important === true
+                })
                 .map((note) =>
-                 <Note key={note.id} {...note}/>
+                 <Note key={note.id} {...note}></Note>
                  )}
             </ol>
             <form onSubmit={handleSubmit}>

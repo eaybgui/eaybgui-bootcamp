@@ -16,7 +16,9 @@ app.use(express.json())
 notes = [{
     "id": 1,
     "title": "Dark Souls No-Hit run",
-    "body": "Asi es"
+    "body": "Asi es",
+    "date": new Date().toISOString(),
+    "important": true
 }]
 
 app.get('/', (request, response) => {
@@ -60,13 +62,23 @@ app.post('/api/notes', (request, response) => {
     const newNote = {
         id: maxId + 1,
         body: note.body,
-        important: typeof note.important != 'undefined' ? note.important : false,
-        date: new Date().toISOString()
+        title: note.title,
+        date: new Date().toISOString(),
+        important: note.important
     }
 
     notes = [...notes, newNote] //tambe es pot fer en concat
 
     response.json(newNote)
+})
+
+app.put('/api/notes', (request, response) => {
+    const noteId = request.body.id
+    
+    //map that return either the same note or the note with the note.important attribute changed
+    notes = notes.map(note => note.id != noteId ? note : {id: note.id, title: note.title, body: note.body, date: note.date, important: !note.important}) 
+    
+    response.json(noteId)
 })
 
 app.use((request, response) => {
